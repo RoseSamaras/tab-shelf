@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Tab Shelf settings</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="icons/favicon-16.png">
+  <script src="src/theme.js"></script>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<main class="opts">
+  <h1 class="brand"><img src="icons/icon128.png" alt="">Tab Shelf settings</h1>
+  <p class="muted">Changes save as you make them.</p>
+  <div id="welcome" class="welcome" hidden>
+    Tab Shelf is installed. Pick a model below to get page summaries. You can skip this for now:
+    stashed pages are kept either way and get summarized once a model is ready.
+  </div>
+
+  <section>
+    <h2>Appearance</h2>
+    <label class="field"><span>Theme</span>
+      <select data-key="theme">
+        <option value="system">Match my system</option>
+        <option value="light">Light</option>
+        <option value="dark">Dark</option>
+      </select></label>
+  </section>
+
+  <section>
+    <h2>Summaries</h2>
+    <label class="radio"><input type="radio" name="provider" value="auto">
+      <span>Automatic (recommended)</span>
+      <small>Uses Ollama when it's running, then Chrome's on-device model, then OpenRouter if you add a key.</small></label>
+    <label class="radio"><input type="radio" name="provider" value="ollama">
+      <span>Ollama on this computer</span><small>Free and private. Needs Ollama installed.</small></label>
+    <label class="radio"><input type="radio" name="provider" value="chrome">
+      <span>Chrome on-device AI</span><small>Free, private, nothing to install. Needs a recent Chrome on supported hardware.</small></label>
+    <label class="radio"><input type="radio" name="provider" value="openrouter">
+      <span>OpenRouter free models</span><small>No hardware needed. Page text is sent to OpenRouter and the model provider.</small></label>
+    <label class="radio"><input type="radio" name="provider" value="custom">
+      <span>Another OpenAI-compatible server</span><small>LM Studio, llama.cpp, vLLM, or a hosted API.</small></label>
+
+    <label class="check"><input type="checkbox" data-key="idleOnly"> Only summarize in the background while I'm away from the computer</label>
+    <p class="muted small">Local models use a lot of CPU while they run. With this on, summaries happen when you step away, or right away while the shelf page is open in front of you.</p>
+    <label class="check"><input type="checkbox" data-key="pauseSummaries"> Pause all summaries</label>
+
+    <h3>Ollama</h3>
+    <label class="field"><span>Address</span><input type="url" data-key="ollamaUrl"></label>
+    <label class="field"><span>Model</span><select id="ollama-model"></select></label>
+    <button id="check-ollama">Refresh model list</button>
+    <p id="ollama-status" class="status"></p>
+    <details class="small">
+      <summary>If Ollama still blocks the extension</summary>
+      <p>Tab Shelf normally handles this for you. If requests are still blocked, allow extensions in Ollama directly. Quit Ollama completely, then:</p>
+      <pre>macOS:   launchctl setenv OLLAMA_ORIGINS "chrome-extension://*"   (then reopen Ollama)
+Linux:   OLLAMA_ORIGINS="chrome-extension://*" ollama serve
+Windows: setx OLLAMA_ORIGINS "chrome-extension://*"   (then restart Ollama)</pre>
+      <p>Then download a model, for example <code>ollama pull llama3.1:8b</code>. Any small instruct model works.</p>
+    </details>
+
+    <h3>Chrome on-device AI</h3>
+    <p id="chrome-status" class="status"></p>
+    <button id="chrome-download" hidden>Download on-device model</button>
+
+    <h3>OpenRouter</h3>
+    <label class="field"><span>API key</span><input type="password" data-key="openrouterKey" autocomplete="off" placeholder="sk-or-…"></label>
+    <label class="field"><span>Model</span><input type="text" data-key="openrouterModel" list="or-models" placeholder="Pick a model ending in :free"></label>
+    <datalist id="or-models"></datalist>
+    <div class="inline"><button id="load-or">Load free models</button><button id="check-or">Check OpenRouter</button></div>
+    <p id="or-status" class="status"></p>
+    <p class="muted small">Create a key at openrouter.ai. Free models have daily request limits; Tab Shelf waits and retries when it hits one.</p>
+
+    <h3>Other server</h3>
+    <label class="field"><span>Base URL (ending in /v1)</span><input type="url" data-key="customUrl" placeholder="http://localhost:1234/v1"></label>
+    <label class="field"><span>Model</span><input type="text" data-key="customModel"></label>
+    <label class="field"><span>API key (if needed)</span><input type="password" data-key="customKey" autocomplete="off"></label>
+
+    <h3>Try it</h3>
+    <button id="try" class="primary">Summarize a sample page</button>
+    <p id="try-status" class="status"></p>
+  </section>
+
+  <section>
+    <h2>Auto-stash</h2>
+    <label class="check"><input type="checkbox" data-key="autoStash"> Stash tabs I haven't looked at for a while</label>
+    <div class="inline field"><span>After</span><input type="number" min="1" max="60" data-key="autoStashDays"><span>days untouched</span></div>
+    <label class="check"><input type="checkbox" data-key="skipPinned"> Leave pinned tabs open</label>
+    <label class="field"><span>Never auto-stash these sites (one per line)</span>
+      <textarea data-key="neverStashDomains" data-list placeholder="mail.google.com&#10;calendar.google.com"></textarea></label>
+    <p class="muted small">The tab you're looking at in each window and tabs playing audio are never auto-stashed.</p>
+  </section>
+
+  <section>
+    <h2>Privacy</h2>
+    <label class="field"><span>Private sites (one per line). Their pages are only summarized on this computer, never by a cloud model.</span>
+      <textarea data-key="privateDomains" data-list placeholder="mybank.com&#10;intranet.company.com"></textarea></label>
+    <label class="field inline"><span>Send at most</span><input type="number" min="200" max="8000" step="100" data-key="maxWords"><span>words of each page to the model</span></label>
+    <p class="muted small">Everything Tab Shelf saves stays in this browser's extension storage.</p>
+  </section>
+
+  <section>
+    <h2>Your data</h2>
+    <button id="export">Export shelf as JSON</button>
+  </section>
+  <footer class="credit">
+    Developed by Rose Samaras
+    · <a href="https://x.com/RoseSamaras" target="_blank" rel="noopener">X @RoseSamaras</a>
+    · <a href="https://reaudit.io" target="_blank" rel="noopener">reaudit.io</a>, brand visibility
+    · <a href="mailto:rose@reaudit.io">rose@reaudit.io</a>
+  </footer>
+</main>
+<div id="saved" role="status">Saved</div>
+<script type="module" src="src/options.js"></script>
+</body>
+</html>

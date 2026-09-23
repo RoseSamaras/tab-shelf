@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Tab Shelf</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="icons/favicon-16.png">
+  <script src="src/theme.js"></script>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="popup">
+  <div class="count">
+    <span id="n" class="big">–</span>
+    <span id="n-label" class="count-label">tabs open in this window</span>
+  </div>
+  <p id="all" class="muted small"></p>
+
+  <label class="note">
+    <span>Why are you keeping these? (optional)</span>
+    <input id="note" type="text" placeholder="e.g. research for the pricing page">
+  </label>
+
+  <button id="stash-window" class="primary wide">Stash this window</button>
+  <div class="row">
+    <button id="stash-tab">Stash this tab</button>
+    <button id="stash-all">Stash all windows</button>
+  </div>
+  <p id="result" aria-live="polite"></p>
+
+  <hr>
+  <div class="shelfline">
+    <span id="shelf-count" class="small"></span>
+    <button id="open-shelf" class="quiet">Open shelf</button>
+  </div>
+  <p id="model" class="muted small"></p>
+  <button id="pause" class="quiet small"></button>
+
+  <script type="module" src="src/popup.js"></script>
+</body>
+</html>

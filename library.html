@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Tab Shelf</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="icons/favicon-16.png">
+  <script src="src/theme.js"></script>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main class="lib">
+    <header class="top">
+      <h1 class="brand"><img src="icons/icon128.png" alt="">Tab Shelf</h1>
+      <input type="search" id="q" placeholder="Search titles, summaries and page text" aria-label="Search the shelf">
+      <button id="digest" class="primary">Build digest</button>
+      <button id="theme" class="quiet" title="Switch theme"></button>
+      <button id="settings">Settings</button>
+    </header>
+    <section id="brief-wrap" aria-live="polite"></section>
+    <div id="notice"></div>
+    <nav class="views" id="views" role="tablist" aria-label="Shelf views"></nav>
+    <section id="content"></section>
+    <footer class="credit">
+    Developed by Rose Samaras
+    · <a href="https://x.com/RoseSamaras" target="_blank" rel="noopener">X @RoseSamaras</a>
+    · <a href="https://reaudit.io" target="_blank" rel="noopener">reaudit.io</a>, brand visibility
+    · <a href="mailto:rose@reaudit.io">rose@reaudit.io</a>
+  </footer>
+</main>
+  <script type="module" src="src/library.js"></script>
+</body>
+</html>
