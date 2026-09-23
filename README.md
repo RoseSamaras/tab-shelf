@@ -27,9 +27,9 @@ You need Chrome 130 or later, or another Chromium browser (Edge, Brave, Arc). Ch
 
 1. **Get the code**
    ```bash
-   git clone <this-repo-url> tab-shelf
+   git clone https://github.com/RoseSamaras/tab-shelf.git
    ```
-   Or download the ZIP from GitHub and unzip it.
+   Or click **Code → Download ZIP** on GitHub and unzip it.
 
 2. **Load it into Chrome**
    - Open `chrome://extensions`
@@ -102,7 +102,7 @@ Things to know:
 
 ### Ways to help
 
-- **Report a bug**: open an issue with your Chrome version, the model you use, what you expected and what happened. Screenshots and console errors help a lot (right-click the toolbar icon → **Inspect popup**, or **Inspect views: service worker** on the extension card).
+- **Report a bug**: [open an issue](https://github.com/RoseSamaras/tab-shelf/issues) with your Chrome version, the model you use, what you expected and what happened. Screenshots and console errors help a lot (right-click the toolbar icon → **Inspect popup**, or **Inspect views: service worker** on the extension card).
 - **Suggest a feature**: open an issue describing the problem it solves.
 - **Send a pull request**: fork the repo, make your change on a branch, and open a PR explaining what it does and how you tested it.
 

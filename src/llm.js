@@ -226,10 +226,18 @@ const clipWords = (t, n) => {
 // ---------- Per-page summary ----------
 
 const SUMMARY_SYSTEM = `You summarize web pages that someone kept open in a browser tab to come back to later.
-Reply with only a JSON object and no other text:
-{"summary": "2-3 plain sentences on what the page says or offers",
- "why_saved": "at most 8 words, a guess at the purpose, e.g. 'comparing pricing' or 'tutorial to follow later'",
- "topic": "a 1-4 word topic label"}`;
+Return a JSON object with three fields:
+- summary: 2-3 plain sentences on what the page says or offers.
+- why_saved: a short phrase (8 words or fewer) guessing why someone kept this tab, such as comparing pricing, or a tutorial to follow later.
+- topic: a topic label of 1 to 4 words.
+Reply with the JSON object only.`;
+
+// Small models sometimes echo the instructions back instead of answering.
+function cleanReason(r) {
+  const t = String(r || '').trim();
+  if (!t || t.length > 90 || /e\.g\.|8 words|words or fewer|at most|guess at/i.test(t)) return '';
+  return t;
+}
 
 export async function summarizePage({ title, url, text }, settings, { isPrivate = false } = {}) {
   const all = await endpointsFor(settings, { purpose: 'summary' });
@@ -265,7 +273,7 @@ export async function summarizePage({ title, url, text }, settings, { isPrivate 
       if (!String(j.summary || '').trim()) throw new LLMError(`${ep.name} returned an empty summary.`, { kind: 'bad_output' });
       return {
         summary: String(j.summary || '').trim(),
-        reason: String(j.why_saved || '').trim(),
+        reason: cleanReason(j.why_saved),
         topic: String(j.topic || '').trim().slice(0, 40),
         provider: ep.name,
       };
