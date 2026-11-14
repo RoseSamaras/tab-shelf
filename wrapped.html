@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AI Wrapped · Tab Shelf</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="icons/favicon-16.png">
+  <script src="src/theme.js"></script>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main class="lib wrapped">
+    <header class="top">
+      <h1 class="brand"><img src="icons/icon128.png" alt="">AI Wrapped</h1>
+      <button id="donate-now" class="primary">Donate now</button>
+      <button id="to-shelf">Shelf</button>
+      <button id="settings">Settings</button>
+    </header>
+    <div id="notice"></div>
+    <section id="summary" aria-live="polite"></section>
+    <nav class="views" id="views" role="tablist" aria-label="AI Wrapped views"></nav>
+    <section id="content"></section>
+    <footer class="credit">
+      Your prompts and replies stay in this browser. Only the labels are donated to the
+      <a href="https://reaudit.io" target="_blank" rel="noopener">Open AI Demand Index</a>, free and public, with no account and nothing that identifies you.
+    </footer>
+  </main>
+  <script type="module" src="src/wrapped/page.js"></script>
+</body>
+</html>

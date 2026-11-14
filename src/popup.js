@@ -66,3 +66,16 @@ async function showModel() {
   const onShelf = (await allItems()).filter((i) => !i.archived).length;
   $('shelf-count').textContent = onShelf ? `${plural(onShelf, 'page')} on your shelf` : 'Your shelf is empty';
 })();
+
+// AI Wrapped line, only when it is on.
+(async () => {
+  const s = await getSettings();
+  if (!s.wrappedEnabled) return;
+  const { allTurns, donatable } = await import('./wrapped/core.js');
+  const waiting = (await allTurns()).filter(donatable).length;
+  $('wrapped-text').textContent = s.wrappedPaused ? 'AI Wrapped is paused.'
+    : waiting ? `${plural(waiting, 'prompt')} waiting${s.wrappedMode === 'auto' ? ', donated at midnight' : ' to review'}.`
+    : 'AI Wrapped is on.';
+  $('wrapped-line').hidden = false;
+  $('open-wrapped').onclick = () => { chrome.tabs.create({ url: chrome.runtime.getURL('wrapped.html') }); window.close(); };
+})();

@@ -18,6 +18,26 @@ function status(id, msg, bad = false) {
   $(id).classList.toggle('bad', bad);
 }
 
+// ---------- AI Wrapped: fields filled before binding ----------
+
+{
+  const { COUNTRIES, SITES, guessCountry } = await import('./wrapped/core.js');
+  const sel = $('wrapped-country');
+  sel.append(new Option('Choose…', ''));
+  for (const [code, name] of Object.entries(COUNTRIES)) sel.append(new Option(name, code));
+  for (const site of SITES) {
+    const label = document.createElement('label');
+    label.className = 'check';
+    const box = document.createElement('input');
+    box.type = 'checkbox';
+    box.checked = settings[`wrappedSite_${site.engine}`] !== false;
+    box.addEventListener('change', async () => { await saveSettings({ [`wrappedSite_${site.engine}`]: box.checked }); flash(); });
+    label.append(box, ` ${site.label}${site.tested ? '' : ' (new)'}`);
+    $('wrapped-sites').append(label);
+  }
+  if (!settings.wrappedCountry && guessCountry()) settings.wrappedCountry = guessCountry();
+}
+
 // ---------- Bind fields ----------
 
 for (const f of document.querySelectorAll('[data-key]')) {
@@ -226,3 +246,21 @@ $('export').onclick = async () => {
   a.click();
   setTimeout(() => URL.revokeObjectURL(a.href), 5000);
 };
+
+// ---------- AI Wrapped ----------
+
+$('open-wrapped').addEventListener('click', () => chrome.tabs.create({ url: chrome.runtime.getURL('wrapped.html') }));
+$('wrapped-lists').addEventListener('click', async () => {
+  const { getLists } = await import('./wrapped/core.js');
+  status('wrapped-status', 'Loading…');
+  const lists = await getLists({ force: true });
+  status('wrapped-status', lists.fetchedAt ? `Brand list for ${lists.country}: ${lists.brands.length} brands.` : 'Could not reach the index. Check its address.', !lists.fetchedAt);
+});
+{
+  // Save the guessed country the first time AI Wrapped is turned on.
+  const box = document.querySelector('[data-key=wrappedEnabled]');
+  box.addEventListener('change', async () => {
+    const s = await getSettings();
+    if (box.checked && !s.wrappedCountry && $('wrapped-country').value) await saveSettings({ wrappedCountry: $('wrapped-country').value });
+  });
+}

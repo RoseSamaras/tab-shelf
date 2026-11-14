@@ -1,5 +1,6 @@
 import { allItems, getSettings, saveSettings, putItem, setText, setQueueState, addStats, hostOf, domainMatches } from './store.js';
 import { processQueue } from './queue.js';
+import { syncCapture, saveCapturedTurn, donateDue, housekeeping, weeklyNotice, updateBadge } from './wrapped/core.js';
 
 const LIBRARY = chrome.runtime.getURL('library.html');
 const INTERNAL = /^(chrome|edge|brave|opera|vivaldi|about|chrome-extension|devtools|view-source|chrome-search):/i;
@@ -10,6 +11,7 @@ const DAY = 86_400_000;
 async function ensureAlarms() {
   if (!(await chrome.alarms.get('process'))) chrome.alarms.create('process', { periodInMinutes: 1 });
   if (!(await chrome.alarms.get('autostash'))) chrome.alarms.create('autostash', { periodInMinutes: 30 });
+  if (!(await chrome.alarms.get('wrapped'))) chrome.alarms.create('wrapped', { periodInMinutes: 30 });
 }
 
 // Ollama rejects requests whose Origin is chrome-extension://…, which is why it
@@ -35,7 +37,12 @@ async function syncOllamaRule() {
 }
 
 chrome.storage.onChanged.addListener((changes, area) => {
-  if (area === 'local' && changes.settings) syncOllamaRule();
+  if (area !== 'local' || !changes.settings) return;
+  syncOllamaRule();
+  // AI Wrapped: start or stop capturing when its switches change.
+  const before = changes.settings.oldValue || {};
+  const after = changes.settings.newValue || {};
+  if (Object.keys({ ...before, ...after }).some((k) => k.startsWith('wrapped') && before[k] !== after[k])) syncCapture();
 });
 
 chrome.runtime.onInstalled.addListener(async ({ reason }) => {
@@ -47,13 +54,28 @@ chrome.runtime.onInstalled.addListener(async ({ reason }) => {
     const st = await getSettings();
     if (st.maxWords === 1500) await saveSettings({ maxWords: 800 });
   }
+  await syncCapture();
   if (reason === 'install') chrome.tabs.create({ url: chrome.runtime.getURL('options.html?welcome=1') });
 });
-chrome.runtime.onStartup.addListener(() => { ensureAlarms(); syncOllamaRule(); });
+chrome.runtime.onStartup.addListener(() => { ensureAlarms(); syncOllamaRule(); syncCapture(); });
 
 chrome.alarms.onAlarm.addListener((a) => {
   if (a.name === 'process') return processQueue({ budgetMs: 45_000, respectIdle: true });
   if (a.name === 'autostash') return autoStash();
+  if (a.name === 'wrapped') return wrappedTick();
+});
+
+// ---------- AI Wrapped ----------
+
+async function wrappedTick() {
+  await housekeeping();
+  await donateDue();
+  await weeklyNotice();
+  await updateBadge();
+}
+
+chrome.notifications.onClicked.addListener((id) => {
+  if (id === 'wrapped-weekly') chrome.tabs.create({ url: chrome.runtime.getURL('wrapped.html') });
 });
 
 chrome.commands.onCommand.addListener(async (cmd) => {
@@ -66,6 +88,17 @@ chrome.runtime.onMessage.addListener((msg, _sender, sendResponse) => {
   if (msg?.type === 'stash') {
     handleStash(msg).then(sendResponse, (e) => sendResponse({ error: e.message }));
     return true;
+  }
+  if (msg?.type === 'wrapped:turn') {
+    // Only from a capture script in a web page, and only while AI Wrapped and that site are switched on.
+    if (!_sender.tab || _sender.id !== chrome.runtime.id) return;
+    getSettings().then((s) => {
+      const t = msg.turn || {};
+      if (!s.wrappedEnabled || s.wrappedPaused || s[`wrappedSite_${t.engine}`] === false) return;
+      if (typeof t.prompt !== 'string' || !t.prompt.trim()) return;
+      return saveCapturedTurn(t, s);
+    }).catch(() => {});
+    return;
   }
   if (msg?.type === 'process') {
     processQueue().then(() => sendResponse({ ok: true }));

@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
   "name": "Tab Shelf",
-  "version": "0.2.1",
-  "description": "Close the tabs you keep for later. Tab Shelf saves them, summarizes each page with local or free AI, and groups them by topic.",
+  "version": "0.3.0",
+  "description": "Close the tabs you keep for later: Tab Shelf saves and summarizes them. Optional AI Wrapped shows what you use AI for and donates the labels to a public index.",
   "minimum_chrome_version": "130",
   "permissions": [
     "tabs",
@@ -12,7 +12,8 @@
     "alarms",
     "favicon",
     "declarativeNetRequestWithHostAccess",
-    "idle"
+    "idle",
+    "notifications"
   ],
   "host_permissions": [
     "<all_urls>"

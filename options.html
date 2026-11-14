@@ -100,6 +100,33 @@ Windows: setx OLLAMA_ORIGINS "chrome-extension://*"   (then restart Ollama)</pre
     <p class="muted small">Everything Tab Shelf saves stays in this browser's extension storage.</p>
   </section>
 
+  <section id="wrapped">
+    <h2>AI Wrapped (optional)</h2>
+    <p class="muted small">See what you use ChatGPT, Gemini, Claude and other AI for, week by week, and donate the
+      labels (never your text) to the free, public <strong>Open AI Demand Index</strong>: what people in each country
+      really ask AI. Your prompts and the replies stay in this browser. Off until you turn it on.</p>
+    <label class="check"><input type="checkbox" data-key="wrappedEnabled"> Turn on AI Wrapped</label>
+    <label class="field"><span>Donating</span>
+      <select data-key="wrappedMode">
+        <option value="auto">Automatic: donated at midnight; until then I can edit or delete anything</option>
+        <option value="review">Only when I press Donate (a weekly reminder)</option>
+      </select></label>
+    <label class="field"><span>Your country</span><select data-key="wrappedCountry" id="wrapped-country"></select></label>
+    <label class="check"><input type="checkbox" data-key="wrappedSensitive"> Also donate health and legal questions (kept private by default)</label>
+    <label class="check"><input type="checkbox" data-key="wrappedPaused"> Pause capturing</label>
+    <h3>Sites</h3>
+    <div id="wrapped-sites"></div>
+    <p class="muted small">Google: only AI Mode is read, never your ordinary searches. Sites marked "new" have not been tested yet.</p>
+    <h3>What is donated</h3>
+    <p class="muted small">For each prompt: what kind of request it was (from fixed lists), which brands the prompt
+      and the reply named (from the index's own brand list for your country), the websites the reply cited, the AI used
+      and the month. Nothing you typed, no reply text, no account, nothing that identifies you. Each donation has a
+      withdrawal code kept only here; withdrawing removes it from the index.</p>
+    <label class="field"><span>Index address</span><input type="url" data-key="wrappedServer"></label>
+    <div class="inline"><button id="open-wrapped" class="primary">Open AI Wrapped</button><button id="wrapped-lists">Reload brand list</button></div>
+    <p id="wrapped-status" class="status"></p>
+  </section>
+
   <section>
     <h2>Your data</h2>
     <button id="export">Export shelf as JSON</button>

@@ -19,6 +19,13 @@ export const DEFAULT_SETTINGS = {
   idleOnly: true,         // background summaries only while you're away from the keyboard
   privateDomains: [],     // never sent to a cloud model
   neverStashDomains: [],  // never auto-stashed
+  // AI Wrapped (optional, off until you turn it on in Settings). Per-site switches (wrappedSite_chatgpt…) default to on.
+  wrappedEnabled: false,
+  wrappedMode: 'auto',    // auto: donated at midnight unless you change them | review: only when you press Donate
+  wrappedCountry: '',
+  wrappedSensitive: false, // donate health and legal questions too
+  wrappedPaused: false,
+  wrappedServer: 'http://localhost:3001', // the Open AI Demand Index; https://reaudit.io once it is live
 };
 
 const ITEM = 'item:';

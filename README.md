@@ -21,6 +21,20 @@ Developed by **Rose Samaras** · X [@RoseSamaras](https://x.com/RoseSamaras) · 
 - **Light, dark or system theme.**
 - **Works with free models**: Ollama, Chrome's built-in on-device AI, OpenRouter free models, or any OpenAI-compatible server.
 
+## AI Wrapped (optional)
+
+Turn it on in **Settings → AI Wrapped** to see what you use AI for (ChatGPT, Gemini, Claude, Perplexity, Copilot, Google AI Mode, DeepSeek, Grok) and to donate the **labels**, never your text, to the free, public Open AI Demand Index.
+
+- Your prompts and the replies are captured as you use those sites and stay in this browser (text deleted after 30 days).
+- Each prompt is labelled on your computer from fixed lists: request kind, journey stage, category, topic, brands named (prompt and reply), sites cited.
+- **Automatic** mode donates at the first midnight at least 12 hours after you asked; until then you can edit labels, keep things private or delete them. **Review** mode sends nothing until you press Donate.
+- Open **AI Wrapped** (popup or Settings) for your summary, the waiting list, past donations (withdraw any of them) and **What is sent**: the exact payload of the next donation.
+- Health and legal questions are kept private unless you switch that on.
+- Light on memory: the capture script only wakes after you send a prompt, reads the reply until it stops changing, then goes quiet. Labelling is plain rules, no model.
+
+For local testing the index address defaults to `http://localhost:3001` (the Reaudit dev server); change it in Settings.
+Sites marked "new" in Settings have not been tested against their current page layout yet.
+
 ## Set it up locally
 
 You need Chrome 130 or later, or another Chromium browser (Edge, Brave, Arc). Chrome's on-device AI needs Chrome 138 or later.
