@@ -23,7 +23,7 @@ Developed by **Rose Samaras** · X [@RoseSamaras](https://x.com/RoseSamaras) · 
 
 ## AI Wrapped (optional)
 
-Turn it on in **Settings → AI Wrapped** to see what you use AI for (ChatGPT, Gemini, Claude, Perplexity, Copilot, Google AI Mode, DeepSeek, Grok) and to donate the **labels**, never your text, to the free, public Open AI Demand Index.
+Turn it on in **Settings → AI Wrapped** to see what you use AI for (ChatGPT, Gemini, Claude, Perplexity, Copilot, Google AI Mode, DeepSeek, Grok) and to donate the **labels**, never your text, to the free, public AI Demand Index.
 
 - Your prompts and the replies are captured as you use those sites and stay in this browser (text deleted after 30 days).
 - Each prompt is labelled on your computer from fixed lists: request kind, journey stage, category, topic, brands named (prompt and reply), sites cited.

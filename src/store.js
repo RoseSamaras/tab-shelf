@@ -25,7 +25,7 @@ export const DEFAULT_SETTINGS = {
   wrappedCountry: '',
   wrappedSensitive: false, // donate health and legal questions too
   wrappedPaused: false,
-  wrappedServer: 'http://localhost:3001', // the Open AI Demand Index; https://reaudit.io once it is live
+  wrappedServer: 'http://localhost:3001', // the AI Demand Index; https://reaudit.io once it is live
 };
 
 const ITEM = 'item:';

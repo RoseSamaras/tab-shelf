@@ -1,5 +1,5 @@
 // AI Wrapped core: stores captured turns on this computer, labels them, donates the labels (never the text)
-// to the Open AI Demand Index, and keeps the local copy tidy. Used by the service worker and the AI Wrapped page.
+// to the AI Demand Index, and keeps the local copy tidy. Used by the service worker and the AI Wrapped page.
 //
 // A turn's life:
 //   waiting  → captured and labelled; you can edit its labels, keep it private or delete it
